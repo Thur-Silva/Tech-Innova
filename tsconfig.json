@@ -1,0 +1,16 @@
+// tsconfig.json
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "lib": ["es2018", "dom"],
+    "outDir": "./dist",
+    "rootDir": "./backend", // <--- APONTE PARA A PASTA ONDE SEU TS ESTÁ
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["backend/**/*.ts"], // <--- INCLUA OS ARQUIVOS DENTRO DE BACKEND
+  "exclude": ["node_modules", "dist"] // Adicione dist para não incluir saída
+}
