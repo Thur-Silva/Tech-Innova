@@ -6,10 +6,13 @@
     <title>Tech Inova: Contato</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@400;700;800&display=swap">
-    <link href="/global.css" rel="stylesheet">
+    <link href="../global.css" rel="stylesheet">
     <link rel="stylesheet" href="./ContactUs.css">
 </head>
 <body class="font-sans bg-[#1A4D2E] min-h-screen flex items-center justify-center overflow-hidden">
+
+    <div id="message-container" class="fixed top-5 right-5 z-50 space-y-3">
+        </div>
 
     <div class="background-text" data-text="LET'S TALK!">LET'S TALK!</div>
 
@@ -52,39 +55,100 @@
                     <label for="message" class="block text-gray-700 text-sm font-bold mb-2">Mensagem</label>
                     <textarea id="message" name="message" rows="5" placeholder="Tenho interesse em conquistar um novo patamar e preciso de suporte com um sistema." class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"></textarea>
                 </div>
-                <button onsubmit="sendEmail()" type="submit" class="bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 ease-in-out shadow-md w-full mt-auto">
+                <button type="submit" class="bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 ease-in-out shadow-md w-full mt-auto">
                     Enviar Mensagem →
                 </button>
             </form>
         </div>
     </div>
 
-
     <script>
-    document.querySelector('form').addEventListener('submit', async (event) => {
-        event.preventDefault(); // Impede o recarregamento da página
+        // Função para exibir a mensagem
+        function showMessage(message, type) {
+            const container = document.getElementById('message-container');
+            const messageDiv = document.createElement('div');
 
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const message = document.getElementById('message').value;
+            // Estilos Tailwind CSS para as mensagens
+            let baseClasses = 'p-4 rounded-lg shadow-lg text-white font-semibold text-center opacity-0 transform translate-x-full transition-all duration-500 ease-out min-w-[250px] max-w-sm';
+            if (type === 'success') {
+                messageDiv.className = `${baseClasses} bg-green-500`; // Verde para sucesso
+            } else if (type === 'error') {
+                messageDiv.className = `${baseClasses} bg-red-500`;   // Vermelho para erro
+            } else {
+                messageDiv.className = `${baseClasses} bg-gray-700`;  // Default
+            }
 
-        const response = await fetch('http://localhost:3000/send-email', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ name, email, message }),
-        });
+            messageDiv.textContent = message;
+            container.appendChild(messageDiv);
 
-        const data = await response.json();
+            // Força o reflow para garantir a transição
+            void messageDiv.offsetWidth;
 
-        if (response.ok) {
-            alert(data.message); // Exibe a mensagem de sucesso
-            document.querySelector('form').reset(); // Limpa o formulário
-        } else {
-            alert('Erro: ' + data.message); // Exibe a mensagem de erro
+            // Inicia a transição de entrada
+            messageDiv.classList.remove('opacity-0', 'translate-x-full');
+            messageDiv.classList.add('opacity-100', 'translate-x-0');
+
+
+            // Remove a mensagem após 5 segundos
+            setTimeout(() => {
+                // Inicia a transição de saída
+                messageDiv.classList.remove('opacity-100', 'translate-x-0');
+                messageDiv.classList.add('opacity-0', 'translate-x-full');
+
+                // Remove o elemento do DOM após a transição
+                messageDiv.addEventListener('transitionend', () => {
+                    messageDiv.remove();
+                }, { once: true }); // Garante que o listener seja removido após uma execução
+            }, 5000); // 5 segundos
         }
-    });
-</script>
+
+        document.querySelector('form').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Impede o recarregamento da página
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+
+            // Validação básica no frontend
+            if (!name || !email || !message) {
+                showMessage('Por favor, preencha todos os campos.', 'error');
+                return; // Impede o envio se houver campos vazios
+            }
+
+            // Desabilitar o botão e mostrar um estado de carregamento (opcional, mas recomendado)
+            const submitButton = event.target.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.textContent;
+            submitButton.textContent = 'Enviando...';
+            submitButton.disabled = true;
+            submitButton.classList.add('opacity-70', 'cursor-not-allowed'); // Estilo de desabilitado
+
+            try {
+                const response = await fetch('http://localhost:3001/send-email', { // Porta 3001
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, email, message }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage(data.message, 'success'); // Exibe a mensagem de sucesso
+                    document.querySelector('form').reset(); // Limpa o formulário
+                } else {
+                    showMessage('Erro: ' + data.message, 'error'); // Exibe a mensagem de erro
+                }
+            } catch (error) {
+                console.error('Erro na requisição fetch:', error);
+                showMessage('Ocorreu um erro ao tentar enviar a mensagem. Por favor, tente novamente.', 'error');
+            } finally {
+                // Reabilitar o botão e restaurar o texto original
+                submitButton.textContent = originalButtonText;
+                submitButton.disabled = false;
+                submitButton.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
+        });
+    </script>
 </body>
 </html>

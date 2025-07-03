@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Inova: Sua Solução Ideal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@400;700;800&display=swap">
+    <link href="./QuizService.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-[#1A4D2E] min-h-screen flex items-center justify-center overflow-hidden">
+
+    <div class="background-text" data-text="YOUR IDEA!">YOUR IDEA!</div>
+
+    <div class="main-container w-full max-w-5xl lg:max-w-6xl xl:max-w-7xl h-[95vh] flex flex-col md:flex-row items-stretch relative z-30 rounded-lg shadow-xl">
+
+        <div class="logo-ti">
+            <span>TI</span>
+        </div>
+
+        <div class="left-column md:w-1/2 flex flex-col justify-center items-center md:items-start text-center md:text-left p-4 md:p-8 relative overflow-hidden">
+            <h1 class="text-6xl md:text-7xl lg:text-8xl font-extrabold text-green-900 mb-6 leading-tight">
+                Descubra <br> Sua Solução
+            </h1>
+
+            <div class="abstract-image-placeholder hidden md:block">
+               <img src="../../images/group.png" alt="">
+            </div>
+
+            <div class="line-pattern-left hidden md:block"></div>
+            <div class="line-pattern-right hidden md:block"></div>
+            </div>
+
+        <div class="right-column md:w-1/2 bg-white rounded-lg p-6 md:p-8 lg:p-10 shadow-lg md:ml-8 mt-8 md:mt-0 relative z-40 flex flex-col justify-between overflow-y-auto">
+            <form id="quizForm" class="space-y-6 flex-grow flex flex-col justify-center">
+                <div>
+                    <label class="block text-xl font-semibold text-green-800 mb-3">
+                        1. Qual o tipo de aplicação você precisa?
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <button type="button" class="quiz-option-btn" data-question="applicationType" data-value="web-app">
+                            <span class="icon-placeholder">🌐</span> Aplicação Web
+                        </button>
+                        <button type="button" class="quiz-option-btn" data-question="applicationType" data-value="mobile-app">
+                            <span class="icon-placeholder">📱</span> Aplicativo Mobile
+                        </button>
+                        <button type="button" class="quiz-option-btn" data-question="applicationType" data-value="desktop-app">
+                            <span class="icon-placeholder">💻</span> Software Desktop
+                        </button>
+                        <button type="button" class="quiz-option-btn" data-question="applicationType" data-value="system-integration">
+                            <span class="icon-placeholder">🔗</span> Integração de Sistemas
+                        </button>
+                        <button type="button" class="quiz-option-btn" data-question="applicationType" data-value="consulting">
+                            <span class="icon-placeholder">💡</span> Consultoria/Otimização
+                        </button>
+                        <button type="button" class="quiz-option-btn" data-question="applicationType" data-value="other">
+                            <span class="icon-placeholder">❓</span> Outro
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xl font-semibold text-green-800 mb-3 mt-6">
+                        2. Quantos usuários deverão acessar o sistema simultaneamente?
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <button type="button" class="quiz-option-btn" data-question="usersCount" data-value="1-10">
+                            <span class="icon-placeholder">👤</span> 1 - 10 Usuários
+                        </button>
+                        <button type="button" class="quiz-option-btn" data-question="usersCount" data-value="11-50">
+                            <span class="icon-placeholder">👥</span> 11 - 50 Usuários
+                        </button>
+                        <button type="button" class="quiz-option-btn" data-question="usersCount" data-value="51-200">
+                            <span class="icon-placeholder">👨‍👩‍👧‍👦</span> 51 - 200 Usuários
+                        </button>
+                        <button type="button" class="quiz-option-btn" data-question="usersCount" data-value="200+">
+                            <span class="icon-placeholder">🏢</span> Mais de 200 Usuários
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xl font-semibold text-green-800 mb-3 mt-6">
+                        3. Qual seu principal objetivo com o software?
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <button type="button" class="quiz-option-btn" data-question="mainGoal" data-value="automate-processes">
+                            <span class="icon-placeholder">⚙️</span> Automatizar processos internos
+                        </button>
+                        <button type="button" class="quiz-option-btn" data-question="mainGoal" data-value="improve-customer-experience">
+                            <span class="icon-placeholder">✨</span> Melhorar a experiência do cliente
+                        </button>
+                        <button type="button" class="quiz-option-btn" data-question="mainGoal" data-value="data-analysis">
+                            <span class="icon-placeholder">📊</span> Análise de dados/Tomada de decisões
+                        </button>
+                         <button type="button" class="quiz-option-btn" data-question="mainGoal" data-value="new-product">
+                            <span class="icon-placeholder">🚀</span> Lançar um novo produto/serviço
+                        </button>
+                         <button type="button" class="quiz-option-btn" data-question="mainGoal" data-value="cost-reduction">
+                            <span class="icon-placeholder">💰</span> Reduzir custos operacionais
+                        </button>
+                         <button type="button" class="quiz-option-btn" data-question="mainGoal" data-value="other-goal">
+                            <span class="icon-placeholder">🎯</span> Outro objetivo
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xl font-semibold text-green-800 mb-3 mt-6">
+                        4. Qual a urgência do seu projeto?
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <button type="button" class="quiz-option-btn" data-question="projectUrgency" data-value="asap">
+                            <span class="icon-placeholder">⚡</span> O mais rápido possível
+                        </button>
+                        <button type="button" class="quiz-option-btn" data-question="projectUrgency" data-value="3-6-months">
+                            <span class="icon-placeholder">🗓️</span> 3-6 meses
+                        </button>
+                        <button type="button" class="quiz-option-btn" data-question="projectUrgency" data-value="6-12-months">
+                            <span class="icon-placeholder">⏳</span> 6-12 meses
+                        </button>
+                        <button type="button" class="quiz-option-btn" data-question="projectUrgency" data-value="exploratory">
+                            <span class="icon-placeholder">🔍</span> Ainda explorando, sem urgência
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="additionalDetails" class="block text-xl font-semibold text-green-800 mb-3 mt-6">
+                        5. Descreva brevemente sua ideia ou necessidade específica:
+                    </label>
+                    <textarea id="additionalDetails" name="additionalDetails" rows="4" 
+                              placeholder="Ex: Preciso de um sistema para gerenciar pedidos de clientes e estoque, com integração com meu CRM atual. Quero que seja acessível via web e mobile."
+                              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-base"></textarea>
+                </div>
+                
+                <button type="submit" class="bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 ease-in-out shadow-md w-full mt-6">
+                    Continuar para Contato →
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('quizForm');
+            const quizOptionButtons = document.querySelectorAll('.quiz-option-btn');
+            
+            // Objeto para armazenar as respostas do quiz temporariamente
+            let quizAnswers = {};
+
+            // Carregar respostas existentes do localStorage, se houver
+            const storedAnswers = localStorage.getItem('techInovaQuizAnswers');
+            if (storedAnswers) {
+                quizAnswers = JSON.parse(storedAnswers);
+                // Pre-selecionar botões e preencher textarea se houver dados no localStorage
+                for (const question in quizAnswers) {
+                    if (question === 'additionalDetails') {
+                        document.getElementById('additionalDetails').value = quizAnswers[question];
+                    } else {
+                        const selectedButton = document.querySelector(`.quiz-option-btn[data-question="${question}"][data-value="${quizAnswers[question]}"]`);
+                        if (selectedButton) {
+                            selectedButton.classList.add('selected'); // Adiciona a classe 'selected'
+                        }
+                    }
+                }
+            }
+
+            quizOptionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const questionName = this.dataset.question;
+                    const value = this.dataset.value;
+
+                    // Remove a classe 'selected' de todos os botões do mesmo grupo de pergunta
+                    document.querySelectorAll(`.quiz-option-btn[data-question="${questionName}"]`).forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+
+                    // Adiciona a classe 'selected' ao botão clicado
+                    this.classList.add('selected');
+                    
+                    // Armazena a resposta no objeto temporário
+                    quizAnswers[questionName] = value;
+
+                    // Salva no localStorage a cada seleção para persistência
+                    localStorage.setItem('techInovaQuizAnswers', JSON.stringify(quizAnswers));
+                });
+            });
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                // Garante que o campo de detalhes adicionais também seja salvo
+                quizAnswers.additionalDetails = document.getElementById('additionalDetails').value;
+                localStorage.setItem('techInovaQuizAnswers', JSON.stringify(quizAnswers));
+
+                // Validação simples: verificar se todas as perguntas de botão foram respondidas
+                const requiredQuestions = ['applicationType', 'usersCount', 'mainGoal', 'projectUrgency'];
+                let allAnswered = true;
+                for (const q of requiredQuestions) {
+                    if (!quizAnswers[q]) {
+                        allAnswered = false;
+                        break;
+                    }
+                }
+
+                if (!allAnswered) {
+                    alert('Por favor, selecione uma opção para todas as perguntas antes de continuar.');
+                    return;
+                }
+
+                // Redireciona para a página de contato
+                window.location.href = '../ContactUs/ContactUs.html';
+            });
+        });
+    </script>
+</body>
+</html>

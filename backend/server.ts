@@ -1,73 +1,43 @@
-import express, { Request, Response, NextFunction } from 'express';
-import nodemailer from 'nodemailer';
+import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
-// 🔐 Carrega variáveis do .env
+import { sendContactEmails } from './functions/sendEmail';
+
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
-
-// 🛡️ Middlewares
 app.use(express.json());
+
 app.use(cors({
-  origin: 'http://localhost:3000', // Altere conforme seu frontend
+  origin: ['http://localhost:3000', 'http://127.0.0.1:5500'], // Adicionado o novo domínio
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type'],
 }));
 
-// 📧 Configuração do Nodemailer
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: parseInt(process.env.EMAIL_PORT || '587'),
-  secure: false, // true para 465, false para outras portas
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false
-  }
-});
-
-// 📨 Rota de envio de e-mail
 app.post('/send-email', async (req: Request, res: Response) => {
   const { name, email, message } = req.body;
 
+  // Validação básica
   if (!name || !email || !message) {
     return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
   }
 
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: process.env.EMAIL_TO || 'destino@example.com',
-    subject: `Mensagem de ${name}`,
-    html: `
-      <p><strong>Nome:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Mensagem:</strong> ${message}</p>
-    `,
-    replyTo: email,
-  };
-
   try {
-    await transporter.sendMail(mailOptions);
-    console.log('Email enviado!');
-    return res.status(200).json({ message: 'Email enviado com sucesso!' });
+    // Chama a função isolada para enviar os e-mails
+    await sendContactEmails({ name, email, message });
+    console.log('Emails enviados com sucesso!');
+    return res.status(200).json({ message: 'Emails enviados com sucesso!' });
   } catch (error) {
-    console.error('Erro:', error);
-    return res.status(500).json({ message: 'Erro ao enviar email.' });
+    console.error('Erro ao enviar email:', error);
+    return res.status(500).json({ message: 'Erro ao enviar emails.' });
   }
 });
 
-
-// 🔗 Rota de teste
+// Rota de teste simples (opcional)
 app.get('/', (req: Request, res: Response) => {
-  res.send('Servidor backend de e-mail está rodando!');
+  res.send('Backend do enviador de e-mails está rodando!');
 });
 
-// 🚀 Inicialização do servidor
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+const PORT = process.env.PORT || 3001; // Usando 3001 para evitar conflito com 3000 do frontend comum
+app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
