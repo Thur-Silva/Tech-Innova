@@ -35,8 +35,6 @@ app.post('/send-email', async (req: Request, res: Response) => {
   }
 });
 
-app.use(express.static(path.join(__dirname, 'pages')));
-
 // Fallback para enviar o index.html
 app.get('*', (req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, '../pages/index/index.html'));
