@@ -34,7 +34,7 @@
             Entre em contato
         </a>
     </div>
-</section>
+
 
 <section class="py-16 bg-white">
     <div class="container mx-auto px-4 text-center">
@@ -147,20 +147,26 @@
 
 <script>
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('/components/abstract-diagram.html') // Caminho correto para o seu componente
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok ' + response.statusText);
-                    }
-                    return response.text();
-                })
-                .then(html => {
-                    document.getElementById('abstract-diagram-placeholder').innerHTML = html;
-                })
-                .catch(error => {
-                    console.error('Houve um problema ao carregar o componente:', error);
-                });
+    const placeholder = document.getElementById('abstract-diagram-placeholder');
+    
+    if (placeholder && !placeholder.dataset.loaded) {
+      fetch('/components/abstract-diagram.html')
+        .then(response => {
+          console.log("Carregando componente");
+          if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+          }
+          return response.text();
+        })
+        .then(html => {
+          placeholder.innerHTML = html;
+          placeholder.dataset.loaded = "true"; // trava contra múltiplas cargas
+        })
+        .catch(error => {
+          console.error('Houve um problema ao carregar o componente:', error);
         });
+    }
+  });
     </script>
 </body>
 </html>
