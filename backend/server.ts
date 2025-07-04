@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import path from 'path';
 
 import { sendContactEmails } from './functions/sendEmail';
-import path from 'path';
 
 dotenv.config();
 
@@ -16,16 +16,15 @@ app.use(cors({
   allowedHeaders: ['Content-Type'],
 }));
 
+// Envio de email
 app.post('/send-email', async (req: Request, res: Response) => {
   const { name, email, message } = req.body;
 
-  // Validação básica
   if (!name || !email || !message) {
     return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
   }
 
   try {
-    // Chama a função isolada para enviar os e-mails
     await sendContactEmails({ name, email, message });
     console.log('Emails enviados com sucesso!');
     return res.status(200).json({ message: 'Emails enviados com sucesso!' });
@@ -35,11 +34,14 @@ app.post('/send-email', async (req: Request, res: Response) => {
   }
 });
 
-// Fallback para enviar o index.html
-app.get('*', (req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, '../pages/index/index.html'));
-});
+// Caminho correto para arquivos estáticos (index.html e componentes)
+const staticPath = path.resolve(__dirname, '../pages/index');
+app.use(express.static(staticPath));
 
+// Fallback para SPA
+app.get('*', (req, res) => {
+  res.sendFile(path.join(staticPath, 'index.html'));
+});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
