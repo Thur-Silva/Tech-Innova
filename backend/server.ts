@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://127.0.0.1:5500'],
+  origin: ['http://localhost:3000', 'http://127.0.0.1:5500', '*'],
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type'],
 }));
@@ -38,10 +38,6 @@ app.post('/send-email', async (req: Request, res: Response) => {
 const staticPath = path.resolve(__dirname, '../pages/index');
 app.use(express.static(staticPath));
 
-// Fallback para SPA
-app.get('*', (req, res) => {
-  res.sendFile(path.join(staticPath, 'index.html'));
-});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
