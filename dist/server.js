@@ -1,65 +1,59 @@
 "use strict";
-// backend/server.ts
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// REMOVA A PRIMEIRA LINHA: import { Request, Response } from 'express';
-const express_1 = __importDefault(require("express")); // Mantenha esta linha
-const nodemailer_1 = __importDefault(require("nodemailer"));
+const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
+const path_1 = __importDefault(require("path"));
+const fs_1 = __importDefault(require("fs"));
+const sendEmail_1 = require("./functions/sendEmail");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const PORT = process.env.PORT || 3000;
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
-    origin: 'http://localhost:3000', // Ou a URL do seu frontend
+    origin: ['http://localhost:3000', 'http://127.0.0.1:5500', '*'],
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type'],
 }));
-// Configuração do transportador Nodemailer
-const transporter = nodemailer_1.default.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: parseInt(process.env.EMAIL_PORT || '587'),
-    secure: false,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
-    tls: {
-        rejectUnauthorized: false
-    }
+// Configuração de arquivos estáticos
+const publicPath = path_1.default.resolve(__dirname, '..');
+app.use(express_1.default.static(publicPath));
+// Servir componentes
+app.use('/components', express_1.default.static(path_1.default.resolve(__dirname, '../components')));
+// Rotas para páginas principais
+app.get('/', (req, res) => {
+    res.sendFile(path_1.default.resolve(__dirname, '../pages/index/index.html'));
 });
+app.get('/ContactUs/ContactUs', (req, res) => {
+    res.sendFile(path_1.default.resolve(__dirname, '../pages/ContactUs/ContactUs.html'));
+});
+// Rota de API para envio de emails
 app.post('/send-email', async (req, res) => {
     const { name, email, message } = req.body;
     if (!name || !email || !message) {
         return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
     }
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: process.env.EMAIL_TO || 'destino@example.com',
-        subject: `Mensagem de ${name}`,
-        html: `
-      <p><strong>Nome:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Mensagem:</strong> ${message}</p>
-    `,
-        replyTo: email,
-    };
     try {
-        await transporter.sendMail(mailOptions);
-        console.log('Email enviado!');
-        return res.status(200).json({ message: 'Email enviado com sucesso!' });
+        await (0, sendEmail_1.sendContactEmails)({ name, email, message });
+        console.log('Emails enviados com sucesso!');
+        return res.status(200).json({ message: 'Emails enviados com sucesso!' });
     }
     catch (error) {
-        console.error('Erro:', error);
-        return res.status(500).json({ message: 'Erro ao enviar email.' });
+        console.error('Erro ao enviar email:', error);
+        return res.status(500).json({ message: 'Erro ao enviar emails.' });
     }
 });
-app.get('/', (req, res) => {
-    res.send('Backend do enviador de e-mails está rodando!');
+// Rota genérica para outros arquivos
+app.get('*', (req, res) => {
+    const filePath = path_1.default.resolve(__dirname, `..${req.path}`);
+    if (fs_1.default.existsSync(filePath)) {
+        res.sendFile(filePath);
+    }
+    else {
+        res.status(404).send('Página não encontrada');
+    }
 });
-app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
-});
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));

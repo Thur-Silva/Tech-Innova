@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import path from 'path';
-
+import fs from 'fs';
 import { sendContactEmails } from './functions/sendEmail';
 
 dotenv.config();
@@ -16,7 +16,23 @@ app.use(cors({
   allowedHeaders: ['Content-Type'],
 }));
 
-// Envio de email
+// Configuração de arquivos estáticos
+const publicPath = path.resolve(__dirname, '..');
+app.use(express.static(publicPath));
+
+// Servir componentes
+app.use('/components', express.static(path.resolve(__dirname, '../components')));
+
+// Rotas para páginas principais
+app.get('/', (req: Request, res: Response) => {
+  res.sendFile(path.resolve(__dirname, '../pages/index/index.html'));
+});
+
+app.get('/ContactUs/ContactUs', (req: Request, res: Response) => {
+  res.sendFile(path.resolve(__dirname, '../pages/ContactUs/ContactUs.html'));
+});
+
+// Rota de API para envio de emails
 app.post('/send-email', async (req: Request, res: Response) => {
   const { name, email, message } = req.body;
 
@@ -34,10 +50,16 @@ app.post('/send-email', async (req: Request, res: Response) => {
   }
 });
 
-// Caminho correto para arquivos estáticos (index.html e componentes)
-const staticPath = path.resolve(__dirname, '../pages/index');
-app.use(express.static(staticPath));
-
+// Rota genérica para outros arquivos
+app.get('*', (req: Request, res: Response) => {
+  const filePath = path.resolve(__dirname, `..${req.path}`);
+  
+  if (fs.existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.status(404).send('Página não encontrada');
+  }
+});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
