@@ -12,12 +12,11 @@ const sendEmail_1 = require("./functions/sendEmail");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
-// Configuração CORS mais segura
 const allowedOrigins = [
     'http://localhost:3000',
     'http://127.0.0.1:5500',
     'http://localhost:3001',
-    'https://tech-innova.onrender.com/',
+    'https://tech-innova.onrender.com',
 ];
 app.use((0, cors_1.default)({
     origin: function (origin, callback) {
@@ -32,21 +31,26 @@ app.use((0, cors_1.default)({
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
-// Configuração de arquivos estáticos
-const publicPath = path_1.default.resolve(__dirname, '..');
+// Servir arquivos estáticos (recomendo usar pasta pública específica)
+const publicPath = path_1.default.resolve(__dirname, '../components'); // se tiver uma pasta public
 app.use(express_1.default.static(publicPath));
 // Servir imagens
 app.use('/images', express_1.default.static(path_1.default.resolve(__dirname, '../images')));
-// Servir CSS da página de contato
+// Servir ContactUs
 app.use('/ContactUs', express_1.default.static(path_1.default.resolve(__dirname, '../pages/ContactUs')));
+// Servir QuizService
+app.use('/QuizService', express_1.default.static(path_1.default.resolve(__dirname, '../pages/QuizService')));
 // Rotas para páginas principais
 app.get('/', (req, res) => {
     res.sendFile(path_1.default.resolve(__dirname, '../pages/index/index.html'));
 });
+app.get('/quiz', (req, res) => {
+    res.sendFile(path_1.default.resolve(__dirname, '../pages/QuizService/QuizService.html'));
+});
 app.get('/contact', (req, res) => {
     res.sendFile(path_1.default.resolve(__dirname, '../pages/ContactUs/ContactUs.html'));
 });
-// Rota de API para envio de emails
+// Rota de envio de email
 app.post('/send-email', async (req, res) => {
     const { name, email, message } = req.body;
     if (!name || !email || !message) {
@@ -54,10 +58,9 @@ app.post('/send-email', async (req, res) => {
             success: false,
             message: 'Todos os campos são obrigatórios.'
         });
-        sendEmail_1.sendContactEmails;
     }
     try {
-        await ({ name, email, message });
+        await (0, sendEmail_1.sendContactEmails)({ name, email, message });
         return res.status(200).json({
             success: true,
             message: 'Email enviado com sucesso!'
@@ -71,10 +74,10 @@ app.post('/send-email', async (req, res) => {
         });
     }
 });
-// Rota genérica para outros arquivos
+// Rota genérica (opcional, pode ajustar conforme necessidade)
 app.get('*', (req, res) => {
     const filePath = path_1.default.resolve(__dirname, `..${req.path}`);
-    if (fs_1.default.existsSync(filePath) && !filePath.includes('pages')) {
+    if (fs_1.default.existsSync(filePath)) {
         res.sendFile(filePath);
     }
     else {

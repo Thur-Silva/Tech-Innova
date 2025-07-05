@@ -10,12 +10,11 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-// Configuração CORS mais segura
 const allowedOrigins = [
   'http://localhost:3000',
   'http://127.0.0.1:5500',
   'http://localhost:3001',
-  'https://tech-innova.onrender.com/',
+  'https://tech-innova.onrender.com',
 ];
 
 app.use(cors({
@@ -31,27 +30,33 @@ app.use(cors({
   credentials: true
 }));
 
-// Configuração de arquivos estáticos
-const publicPath = path.resolve(__dirname, '..');
+// Servir arquivos estáticos (recomendo usar pasta pública específica)
+const publicPath = path.resolve(__dirname, '../components');  // se tiver uma pasta public
 app.use(express.static(publicPath));
 
 // Servir imagens
 app.use('/images', express.static(path.resolve(__dirname, '../images')));
 
-// Servir CSS da página de contato
+// Servir ContactUs
 app.use('/ContactUs', express.static(path.resolve(__dirname, '../pages/ContactUs')));
 
+// Servir QuizService
+app.use('/QuizService', express.static(path.resolve(__dirname, '../pages/QuizService')));
 
 // Rotas para páginas principais
 app.get('/', (req: Request, res: Response) => {
   res.sendFile(path.resolve(__dirname, '../pages/index/index.html'));
 });
 
+app.get('/quiz', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../pages/QuizService/QuizService.html'));
+});
+
 app.get('/contact', (req: Request, res: Response) => {
   res.sendFile(path.resolve(__dirname, '../pages/ContactUs/ContactUs.html'));
 });
 
-// Rota de API para envio de emails
+// Rota de envio de email
 app.post('/send-email', async (req: Request, res: Response) => {
   const { name, email, message } = req.body;
 
@@ -59,11 +64,11 @@ app.post('/send-email', async (req: Request, res: Response) => {
     return res.status(400).json({ 
       success: false,
       message: 'Todos os campos são obrigatórios.' 
-    });sendContactEmails
+    });
   }
 
   try {
-    await ({ name, email, message });
+    await sendContactEmails({ name, email, message });
     return res.status(200).json({ 
       success: true,
       message: 'Email enviado com sucesso!' 
@@ -77,11 +82,11 @@ app.post('/send-email', async (req: Request, res: Response) => {
   }
 });
 
-// Rota genérica para outros arquivos
+// Rota genérica (opcional, pode ajustar conforme necessidade)
 app.get('*', (req: Request, res: Response) => {
   const filePath = path.resolve(__dirname, `..${req.path}`);
   
-  if (fs.existsSync(filePath) && !filePath.includes('pages')) {
+  if (fs.existsSync(filePath)) {
     res.sendFile(filePath);
   } else {
     res.status(404).send('Página não encontrada');
