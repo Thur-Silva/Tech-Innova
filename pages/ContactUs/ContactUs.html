@@ -6,8 +6,8 @@
     <title>Tech Inova: Contato</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@400;700;800&display=swap">
-    <link href="../global.css" rel="stylesheet">
-    <link rel="stylesheet" href="./ContactUs.css">
+    <link href="/pages/global.css" rel="stylesheet">
+    <link rel="stylesheet" href="/ContactUs/ContactUs.css">
 </head>
 <body class="font-sans bg-[#1A4D2E] min-h-screen flex items-center justify-center overflow-hidden">
 
@@ -30,8 +30,8 @@
                 E Criar Algo Incrível
             </p>
 
-            <img src="../../images/estatua.png" alt="Estátua da Liberdade" class="lady-liberty-img hidden md:block">
-            <img src="../../images/mão-2.png" alt="Mão estendida" class="hand-img-2 hidden md:block">
+            <img src="/images/estatua.png" alt="Estátua da Liberdade" class="lady-liberty-img hidden md:block">
+            <img src="/images/mão-2.png" alt="Mão estendida" class="hand-img-2 hidden md:block">
 
             <div class="line-pattern-left hidden md:block"></div>
             <div class="line-pattern-right hidden md:block"></div>
@@ -123,7 +123,7 @@
             submitButton.classList.add('opacity-70', 'cursor-not-allowed'); // Estilo de desabilitado
 
             try {
-                const response = await fetch('http://localhost:3001/send-email', { // Porta 3001
+                const response = await fetch('/send-email', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
