@@ -39,7 +39,8 @@ app.use(express.static(publicPath));
 app.use('/images', express.static(path.resolve(__dirname, '../images')));
 
 // Servir CSS da página de contato
-app.use('/ContactUs', express.static(path.resolve(__dirname, '../pages/ContactUs/ContactUs.css')));
+app.use('/ContactUs', express.static(path.resolve(__dirname, '../pages/ContactUs')));
+
 
 // Rotas para páginas principais
 app.get('/', (req: Request, res: Response) => {
@@ -87,5 +88,5 @@ app.get('*', (req: Request, res: Response) => {
   }
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
